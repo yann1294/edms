@@ -62,6 +62,8 @@
 ### POST /auth/login
 Authenticate user and return token/session info.
 
+Bootstrap note: during Task 1 (repository bootstrap) this endpoint may respond with `501 Not Implemented` until authentication is implemented (Task 4).
+
 **Request**
 ```json
 {
