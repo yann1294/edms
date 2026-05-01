@@ -27,8 +27,8 @@ This document defines the MVP and foundation architecture for phase 1. AI and ag
 - Metadata Schemas
 - Workflows
 - Permissions
-- Signatures
-- Audit Logs
+<!--- Signatures
+- Audit Logs-->
 
 ---
 
@@ -67,9 +67,9 @@ This document defines the MVP and foundation architecture for phase 1. AI and ag
 - metadata schema support
 - basic workflow engine
 - signature request tracking
-- audit logging
+<!--- audit logging-->
 - indexing and search
-- notification hooks
+<!--- notification hooks-->
 
 ### Out of scope for phase 1
 - AI summarization, classification, and extraction logic

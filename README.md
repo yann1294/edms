@@ -1,6 +1,6 @@
 # EDMS / GED / IRS Repository Starter
 
-This repository contains the initial system design and implementation planning documents for a modular-monolith EDMS platform.
+This repository contains the system design and an initial implementation scaffold for a modular-monolith EDMS platform.
 
 ## Included files
 
@@ -8,6 +8,7 @@ This repository contains the initial system design and implementation planning d
 - `docs/api-contracts.md`
 - `docs/security-rules.md`
 - `docs/permission-matrix.md`
+- `docs/done-criteria.md`
 - `codex-backlog.md`
 
 ## Recommended stack
@@ -28,6 +29,23 @@ Use these documents as the source of truth for:
 3. API implementation
 4. authorization behavior
 5. Codex task execution order
+
+## Apps
+
+- `apps/api`: NestJS API (stubbed health + auth/audit scaffolding)
+- `apps/worker`: NestJS worker process scaffold
+- `apps/web`: Next.js web scaffold
+
+## Local development
+
+1. Copy environment variables:
+   - `cp .env.example .env`
+2. Start local dependencies:
+   - `docker compose up -d`
+3. Install dependencies:
+   - `npm install`
+4. Run tests:
+   - `npm test`
 
 ## Suggested next step
 
