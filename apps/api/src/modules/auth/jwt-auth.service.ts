@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import jwt from 'jsonwebtoken';
-import { JwtAccessTokenPayload } from './auth.types';
+import { JwtAccessTokenPayload } from './jwt.types';
 
 @Injectable()
 export class JwtAuthService {

@@ -1,16 +1,10 @@
-export type RequestContextUser = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  status?: string;
-};
+import { CurrentUser } from './current-user';
 
 export type RequestContext = {
-  user?: RequestContextUser;
+  user?: CurrentUser;
 };
 
 export type RequestWithContext = {
-  headers?: Record<string, string | undefined>;
-  context?: RequestContext;
+  headers: Record<string, string | undefined>;
+  context: RequestContext;
 };

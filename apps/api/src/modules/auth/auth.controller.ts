@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { IsEmail, IsString } from 'class-validator';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { RequestWithContext } from '../../shared/request-context';
+import { CurrentUser } from './current-user.decorator';
+import { CurrentUser as CurrentUserType } from '../../shared/current-user';
 
 class LoginDto {
   @IsEmail()
@@ -23,9 +24,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  me(@Req() request: RequestWithContext) {
-    const user = request.context?.user;
-    if (!user) throw new UnauthorizedException();
+  me(@CurrentUser() user: CurrentUserType) {
     return user;
   }
 }

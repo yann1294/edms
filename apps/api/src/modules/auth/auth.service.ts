@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { AuditService } from '../audit/audit.service';
-import { AuthUser } from './auth.types';
+import { CurrentUser } from '../../shared/current-user';
 import { JwtAuthService } from './jwt-auth.service';
 import { PasswordHasherService } from './password-hasher.service';
 import { UsersLookupService } from './users-lookup.service';
@@ -23,7 +23,7 @@ export class AuthService {
     private readonly jwtAuth: JwtAuthService,
   ) {}
 
-  async login(email: string, password: string): Promise<{ accessToken: string; user: AuthUser }> {
+  async login(email: string, password: string): Promise<{ accessToken: string; user: CurrentUser }> {
     const prefix = emailHashPrefix(email);
 
     this.auditService.record({
@@ -57,12 +57,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials.');
     }
 
-    const safeUser: AuthUser = {
+    const safeUser: CurrentUser = {
       id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      status: user.status,
+      status: user.status === 'invited' ? 'invited' : 'active',
     };
 
     const accessToken = this.jwtAuth.signAccessToken({ userId: user.id });

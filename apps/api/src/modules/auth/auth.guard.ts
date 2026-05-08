@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtAuthService } from './jwt-auth.service';
 import { UsersLookupService } from './users-lookup.service';
 import { RequestWithContext } from '../../shared/request-context';
+import { CurrentUser } from '../../shared/current-user';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -12,6 +13,7 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithContext>();
+    (request as any).context ??= {};
     const authHeader =
       (request?.headers as Record<string, string | undefined> | undefined)?.authorization ??
       (request?.headers as Record<string, string | undefined> | undefined)?.Authorization;
@@ -26,16 +28,14 @@ export class AuthGuard implements CanActivate {
     if (!user) throw new UnauthorizedException('User not found.');
     if (user.status === 'disabled') throw new UnauthorizedException('User is disabled.');
 
-    request.context ??= {};
-    request.context.user = {
+    const currentUser: CurrentUser = {
       id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      status: user.status,
+      status: user.status === 'invited' ? 'invited' : 'active',
     };
-
-    (request as any).user = request.context.user;
+    request.context.user = currentUser;
     return true;
   }
 }

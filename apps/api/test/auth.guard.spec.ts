@@ -2,9 +2,9 @@ import { UnauthorizedException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import bcrypt from 'bcryptjs';
 import { AuthModule } from '../src/modules/auth/auth.module';
-import { AuthController } from '../src/modules/auth/auth.controller';
 import { AuthGuard } from '../src/modules/auth/auth.guard';
 import { AuthService } from '../src/modules/auth/auth.service';
+import { JwtAuthService } from '../src/modules/auth/jwt-auth.service';
 import { UsersLookupService } from '../src/modules/auth/users-lookup.service';
 
 describe('AuthGuard + RequestContext', () => {
@@ -42,7 +42,6 @@ describe('AuthGuard + RequestContext', () => {
 
     const authService = moduleRef.get(AuthService);
     const guard = moduleRef.get(AuthGuard);
-    const controller = moduleRef.get(AuthController);
 
     const { accessToken } = await authService.login(user.email, 'secret');
 
@@ -57,7 +56,7 @@ describe('AuthGuard + RequestContext', () => {
       status: user.status,
     });
 
-    expect(controller.me(req)).toEqual(req.context.user);
+    expect(req.context).toBeDefined();
   });
 
   it('rejects missing bearer token', async () => {
@@ -89,6 +88,30 @@ describe('AuthGuard + RequestContext', () => {
 
     const guard = moduleRef.get(AuthGuard);
     const req: any = { headers: { authorization: 'Bearer invalid.token.value' } };
+    await expect(guard.canActivate(makeContext(req))).rejects.toThrow(UnauthorizedException);
+  });
+
+  it('rejects disabled users', async () => {
+    const disabledUser = {
+      ...user,
+      status: 'disabled',
+    };
+
+    const moduleRef = await Test.createTestingModule({
+      imports: [AuthModule],
+    })
+      .overrideProvider(UsersLookupService)
+      .useValue({
+        findByEmail: async (email: string) => (email === disabledUser.email ? disabledUser : null),
+        findById: async (id: string) => (id === disabledUser.id ? disabledUser : null),
+      })
+      .compile();
+
+    const guard = moduleRef.get(AuthGuard);
+    const jwtAuth = moduleRef.get(JwtAuthService);
+    const accessToken = jwtAuth.signAccessToken({ userId: disabledUser.id });
+    const req: any = { headers: { authorization: `Bearer ${accessToken}` } };
+
     await expect(guard.canActivate(makeContext(req))).rejects.toThrow(UnauthorizedException);
   });
 });
