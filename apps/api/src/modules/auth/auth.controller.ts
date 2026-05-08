@@ -1,8 +1,8 @@
-import { Body, Controller, Get, NotImplementedException, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { IsEmail, IsString } from 'class-validator';
-import { createHash } from 'crypto';
-import { AuditService } from '../audit/audit.service';
 import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
+import { RequestWithContext } from '../../shared/request-context';
 
 class LoginDto {
   @IsEmail()
@@ -14,33 +14,18 @@ class LoginDto {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auditService: AuditService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   login(@Body() body: LoginDto) {
-    const emailHashPrefix = createHash('sha256')
-      .update(body.email.trim().toLowerCase())
-      .digest('hex')
-      .slice(0, 12);
-
-    this.auditService.record({
-      actionCode: 'auth.login.attempt',
-      metadata: {
-        emailHashPrefix,
-      },
-    });
-
-    throw new NotImplementedException('Login is not implemented yet (bootstrap scaffold).');
+    return this.authService.login(body.email, body.password);
   }
 
   @UseGuards(AuthGuard)
   @Get('me')
-  me() {
-    return {
-      id: 'dev-user',
-      email: 'dev@example.com',
-      firstName: 'Dev',
-      lastName: 'User',
-    };
+  me(@Req() request: RequestWithContext) {
+    const user = request.context?.user;
+    if (!user) throw new UnauthorizedException();
+    return user;
   }
 }
