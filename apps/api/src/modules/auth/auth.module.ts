@@ -12,6 +12,6 @@ import { UsersLookupService } from './users-lookup.service';
   imports: [AuditModule, UsersModule],
   controllers: [AuthController],
   providers: [AuthService, JwtAuthService, PasswordHasherService, UsersLookupService, AuthGuard],
-  exports: [AuthService, AuthGuard],
+  exports: [AuthService, JwtAuthService, UsersLookupService, AuthGuard],
 })
 export class AuthModule {}
