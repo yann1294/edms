@@ -13,6 +13,7 @@ import { SearchModule } from './modules/search/search.module';
 import { SignaturesModule } from './modules/signatures/signatures.module';
 import { UsersModule } from './modules/users/users.module';
 import { WorkflowModule } from './modules/workflow/workflow.module';
+import { DocumentVersionsModule } from './modules/document-versions/document-versions.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { WorkflowModule } from './modules/workflow/workflow.module';
     RolesModule,
     AccessPoliciesModule,
     DocumentsModule,
+    DocumentVersionsModule,
     FileAssetsModule,
     MetadataSchemasModule,
     WorkflowModule,
