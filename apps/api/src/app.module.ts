@@ -8,6 +8,7 @@ import { FileAssetsModule } from './modules/file-assets/file-assets.module';
 import { MetadataSchemasModule } from './modules/metadata-schemas/metadata-schemas.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { AccessPoliciesModule } from './modules/access-policies/access-policies.module';
 import { SearchModule } from './modules/search/search.module';
 import { SignaturesModule } from './modules/signatures/signatures.module';
 import { UsersModule } from './modules/users/users.module';
@@ -20,6 +21,7 @@ import { WorkflowModule } from './modules/workflow/workflow.module';
     AuditModule,
     UsersModule,
     RolesModule,
+    AccessPoliciesModule,
     DocumentsModule,
     FileAssetsModule,
     MetadataSchemasModule,
@@ -31,4 +33,3 @@ import { WorkflowModule } from './modules/workflow/workflow.module';
   ],
 })
 export class AppModule {}
-

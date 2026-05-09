@@ -14,6 +14,10 @@ export class PermissionCatalogService {
     return this.permissionRepository.list();
   }
 
+  exists(code: string): boolean {
+    return Boolean(this.permissionRepository.findByCode(code.trim()));
+  }
+
   /**
    * Seeds or updates the permission catalog, using the "DB" (repository) as source of truth.
    * This method is idempotent.
@@ -30,4 +34,3 @@ export class PermissionCatalogService {
     );
   }
 }
-
